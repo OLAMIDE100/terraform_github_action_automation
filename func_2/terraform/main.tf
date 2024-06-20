@@ -39,6 +39,8 @@ resource "google_storage_bucket_object" "archive" {
 
 
 
+
+
 resource "google_cloudfunctions_function" "play" {
   available_memory_mb          = 1024
   entry_point                  = "main"
