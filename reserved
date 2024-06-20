@@ -1,0 +1,55 @@
+resource "google_monitoring_alert_policy" "play_failure" {
+  combiner              = "OR"
+  display_name          = "play_failure"
+  enabled               = true
+  notification_channels = ["projects/${var.gcp_project_name}/notificationChannels/15437923423320889957"]    #####################################################     to be change
+  project               = var.gcp_project_name
+  user_labels           = {}
+  alert_strategy {
+    auto_close = "172800s"
+    notification_rate_limit {
+      period = "1800s"
+    }
+  }
+  conditions {
+    display_name = "Log match condition"
+    condition_matched_log {
+      filter = "resource.type = \"cloud_function\" resource.labels.function_name = \"play\" resource.labels.region = \"europe-west3\"\n textPayload:(\"Error occurred during the API call for\") severity=\"CRITICAL\"\n"
+      label_extractors = {
+        text_payload = "EXTRACT(textPayload)"
+      }
+    }
+  }
+  documentation {
+    content   = "Text: $${log.extracted_label.text_payload}"
+    mime_type = "text/markdown"
+  }
+  depends_on = [google_cloudfunctions_function.play]
+}
+
+
+resource "google_monitoring_alert_policy" "cloudfunction_alerting" {
+  combiner              = "OR"
+  display_name          = "cloudfunction_alerting"
+  enabled               = true
+  notification_channels = ["projects/nabuminds-test/notificationChannels/13669031869548845261"]
+  project               = "nabuminds-test"
+  user_labels           = {}
+  alert_strategy {
+    auto_close = "86400s"
+    notification_rate_limit {
+      period = "300s"
+    }
+  }
+  conditions {
+    display_name = "Log match condition"
+    condition_matched_log {
+      filter = "resource.type = \"cloud_function\"\nresource.labels.region = \"europe-west3\"\nseverity=ERROR"
+      label_extractors = {
+        text_payload = "EXTRACT(textPayload)",
+        function_name = "EXTRACT(resource.labels.function_name)"
+      }
+    }
+  }
+
+}
