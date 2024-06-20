@@ -12,6 +12,7 @@ export TF_VAR_function_version=${GITHUB_RUN_NUMBER}_${GITHUB_RUN_ATTEMPT}
 if [ $path == "func_1/terraform"]
 
 then
+    echo $path
     solutions=(ENG NIG ARG EST)
 
     echo ${solutions[@]}  
@@ -21,11 +22,7 @@ then
       
     done
 
-
 else
-
-  echo 'yes' | terraform -chdir=$path init 
-  terraform -chdir=$path  plan
-  terraform -chdir=$path  apply -auto-approve -input=false 
+  echo $path
 
 fi

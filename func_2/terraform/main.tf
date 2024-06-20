@@ -62,6 +62,8 @@ depends_on = [ google_storage_bucket_object.archive]
 
 
 
+
+
 resource "google_cloud_scheduler_job" "play" {
   attempt_deadline = "180s"
   name             = "play-${var.solution}"
