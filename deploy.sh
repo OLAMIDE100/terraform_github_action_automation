@@ -15,6 +15,7 @@ then
     solutions=(ENG NIG ARG EST)
 
     echo ${solutions[@]}  
+    
     for i in ${solutions[@]}; do
         echo $i
         export TF_VAR_solution=$i

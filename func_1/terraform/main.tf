@@ -14,6 +14,8 @@ terraform {
 }
 
 
+
+
 provider "google" {
   
   project     = var.gcp_project_name
@@ -24,7 +26,7 @@ provider "google" {
 data "archive_file" "source" {
     type        = "zip"
     source_dir  = "../cloudfunction/app"
-    output_path = "play-${var.solution}//${var.function_version}/function-source.zip"
+    output_path = "play-${var.solution}/${var.function_version}/function-source.zip"
 }
 
 resource "google_storage_bucket_object" "archive" {
