@@ -22,7 +22,7 @@ then
         export TF_VAR_solution=$i
         echo 'yes' | terraform -chdir=$path init  -backend-config="bucket=nabuminds_terraform-test" -backend-config="prefix=gcp/play-$TF_VAR_solution/state"
         echo 'yes' | terraform -chdir=$path plan
-        echo 'yes' | terraform -chdir=$path apply
+        echo 'yes' | terraform -chdir=$path -auto-approve -input=false
         rm -rf $path/.terraform
         rm $path/.terraform.lock.hcl
         rm -rf $path/play-$i
