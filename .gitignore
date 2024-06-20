@@ -2,3 +2,4 @@ test.json
 des.sh
 dev.sh
 reserved
+*.DS_Store

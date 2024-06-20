@@ -1,0 +1,54 @@
+name: 'deployment_job'
+
+on:
+  push:
+    branches:
+
+     - "main"
+
+    paths:
+     - 'func_1/**'
+     - 'func_2/**'
+
+jobs:
+  Cloud_Resources_Deployment:
+    name: 'Cloud_Resources_Deployment'
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Detect_Changes
+      uses: dorny/paths-filter@v2
+      id: changes
+      with:
+
+        base: 'main'
+
+        filters: |
+          func_1:
+            - 'func_1/**'
+          func_2:
+            - 'func_2/**'
+       
+
+
+    - name: Setup_Terraform
+      uses: hashicorp/setup-terraform@v1
+
+    - name: func_1
+      if: steps.changes.outputs.func_1 == 'true' 
+      run: |
+            bash deploy.sh "func_1/terraform"
+      env:
+         CREDENTIALS : ${{ secrets.TF_PROD_TOKEN }}
+
+
+    - name: func_2
+      if: steps.changes.outputs.func_2 == 'true' 
+      run: |
+            bash deploy.sh "func_2/terraform"
+      env:
+         CREDENTIALS : ${{ secrets.TF_PROD_TOKEN }}
